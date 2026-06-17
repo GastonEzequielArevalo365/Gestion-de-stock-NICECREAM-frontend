@@ -1,6 +1,7 @@
 import {HiHome} from "react-icons/hi"
 import {FaBoxes,FaThLarge} from "react-icons/fa";
 import {useState} from "react";
+import {Link} from "react-router-dom"
 
 const Navbar = ()=>{
     return(
@@ -22,9 +23,24 @@ const Navbar = ()=>{
             />
         </div>
         <ul className="flex space-x-6 hover:scale-110 transition-transform">
-          <li><a href="#" className="hover:text-gray-900 flex items-center gap-x-2 hover:border rounded-full px-3 border-gray-400"><HiHome/>Inicio</a></li>
-          <li><a href="#" className="hover:text-gray-900 flex items-center gap-x-2 hover:border rounded-full px-3 border-gray-400"><FaBoxes/>Stock</a></li>
-          <li><a href="#" className="hover:text-gray-900 flex items-center gap-x-2 hover:border rounded-full px-3 border-gray-400"><FaThLarge/>Secciones</a></li>
+          <li>
+            <Link
+              to="/"
+              className="hover:text-gray-900 flex items-center gap-x-2 hover:border rounded-full px-3 border-gray-400"
+            >
+              <HiHome />
+              Inicio
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/stock"
+              className="hover:text-gray-900 flex items-center gap-x-2 hover:border rounded-full px-3 border-gray-400"
+            >
+              <FaBoxes/>
+              Stock
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

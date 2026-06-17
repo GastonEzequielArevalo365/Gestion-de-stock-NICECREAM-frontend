@@ -15,7 +15,7 @@ const CardStock = ({
     onDelete
 }) => {
     return(
-        <div className="bg-white rounded-lg shadow-md flex items-center overflow-hidden gap-10">
+        <div className="bg-white rounded-lg shadow-md flex items-center overflow-hidden gap-10 w-full">
             <div className="w-30 h-30 bg-gray-100 flex items-center justify-center">
                 {
                     imagen ? (
@@ -37,6 +37,11 @@ const CardStock = ({
                         >
                             {estado}
                         </span>
+                    <div className="flex gap-6 ext-2xl">
+                        <button onClick={onDelete} className="cursor-pointer hover:text-red-500">
+                            <FaTrash /> 
+                        </button>
+                    </div>  
                 </div>
                 <p className="text-gray-500 text-1xl">
                         ID:{codigo}
@@ -59,20 +64,12 @@ const CardStock = ({
                     </span>
 
                 </div>
-                <div>
-                    <p className="mt-6 text-gray-500 text-xl">
+                <div className="py-2">
+                    <p className="text-gray-500 text-xl">
                     {descripcion}
                     </p>
                 </div> 
             </div>
-            <div className="flex gap-6 ext-2xl">
-                    <button onClick={onEdit} className="cursor-pointer hover:text-blue-500">
-                    <FaTrash />  
-                    </button>
-                    <button onClick={onDelete} className="cursor-pointer hover:text-red-500">
-                        <FaTrash /> 
-                    </button>
-            </div>  
         </div>
     )   
 }
