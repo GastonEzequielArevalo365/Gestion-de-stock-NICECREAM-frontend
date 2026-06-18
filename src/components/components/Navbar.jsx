@@ -3,7 +3,7 @@ import {FaBoxes,FaThLarge} from "react-icons/fa";
 import {useState} from "react";
 import {Link} from "react-router-dom"
 
-const Navbar = ()=>{
+const Navbar = ({busqueda,setBusqueda})=>{
     return(
     <nav className="top-0 left-0 w-full bg-white shadow-md z-50 text-gray-700 font-bold">
       <div className="mx-auto px-4 py-3 flex justify-between items-center">
@@ -19,7 +19,9 @@ const Navbar = ()=>{
             <input 
                 className="border rounded-full px-5 py-2 w-150 hover:scale-110 transition-transform"
                 type="text"
-                placeholder="Buscar por nombre o ID de la máquinas" 
+                placeholder="Buscar por nombre o ID de la máquinas"
+                value={busqueda}
+                onChange = {(e) => setBusqueda(e.target.value)}
             />
         </div>
         <ul className="flex space-x-6 hover:scale-110 transition-transform">
