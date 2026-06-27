@@ -10,15 +10,20 @@ import { getPallets } from "../services/pallets.service"
 import { getMaquinas } from "../services/maquinas.service"
 
 const Home = () => {
+    //Use state es un Hook de react que te permite guardar datos (estados) dentro de un componente funcional.
+    //Y hacer que la interfaz se vuelva a renderizar cuando estos datos cambian.
+    //Es importante importarlo antes de usarlo.
 
     //Use state para cantidades en el dashboard
+    //cantidadRacks --> Es el valor actual del estado.
+    //setCantidadRacks --> Función para modificar ese estado.
+    //useState(0) --> Crea el estado con valor inicial 0
     const [cantidadRacks, setCantidadRacks] = useState(0)
     const [cantidadCalles, setCantidadCalles] = useState(0)
     const [cantidadPallets, setCantidadPallets] = useState(0)
     const [cantidadMaquinas, setCantidadMaquinas] = useState(0)
 
     //Use state para filtro de máquinas
-
     const [maquinas, setMaquinas] = useState([]);
     const [busqueda, setBusqueda] = useState("")
 
@@ -46,9 +51,8 @@ const Home = () => {
     return (
         <>
             <Navbar busqueda={busqueda} setBusqueda={setBusqueda} />
-
             <div className="w-full  bg-gray-100 shadow-md py-6 px-15">
-                <div className="flex items-center gap-x-10">
+                <div className="flex items-center gap-x-10  mb-8">
                     <img
                         src="public/logo.png"
                         alt="Logo"
@@ -63,7 +67,7 @@ const Home = () => {
                         </h2>
                     </div>
                 </div>
-                <div className="grid grid-cols-4 gap-6 py-8">
+                <div className="grid grid-cols-4 gap-6 mb-8">
                     <div className="bg-white shadow-md rounded-lg p-6 flex items-center gap-6 hover:scale-110 transition-transform cursor-pointer">
                         <div className="text-red-500 text-3xl mb-2">
                             <FaLayerGroup></FaLayerGroup>
@@ -95,53 +99,67 @@ const Home = () => {
                         <div className="text-green-500 text-3xl">
                             <MdInventory2></MdInventory2>
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex    flex-col">
                             <h2 className="text-2xl font-bold text-gray-700">{cantidadMaquinas}</h2>
                             <span className="text-gray-700">Máquinas</span>
                         </div>
                     </div>
                 </div>
                 <div className="grid grid-cols-2">
-                    <span className="text-gray-700 font-bold flex items-center gap-x-2"><FaClock></FaClock>Ultimas máquinas agregadas</span>
-                    <button className="flex items-center gap-x-2 text-red-500 font-bold cursor-pointer hover:scale-110 ml-auto">Ver todo <FaArrowRight ></FaArrowRight></button>
+                    <span className="text-gray-700 font-bold flex items-center gap-x-2"><FaClock></FaClock>Ubicación de máquinas</span>
                 </div>
-                <div className="grid grid-cols-3 gap-5 py-5">
-                    {maquinasFiltradas.map((maquina) => (
+                <div className="grid grid-cols-2 gap-5 py-5">
+                    {maquinasFiltradas.slice(0,6).map((maquina) => (
                         <div
                             key={maquina.id}
-                            className="bg-white shadow-md rounded-lg h-27 p-2 hover:scale-105 transition-transform cursor-pointer flex items-center"
+                            className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform cursor-pointer flex gap-4"
                         >
-                            <div className="w-20 h-20 bg-gray-200 rounded-3xl flex items-center justify-center">
-                                <FaCube className="text-gray-500 text-4xl" />
+                            <div className="w-24 h-24 bg-gray-200 rounded-3xl overflow-hidden flex-shrink-0">
+                                <img
+                                    src={`http://192.168.1.43:3001/uploads/${maquina.imagen}`}
+                                    alt={maquina.nombre}
+                                    className="w-full h-full "
+                                />
                             </div>
+                            <div className="flex-1">
+                                <h2 className="text-xl font-bold text-gray-700">
+                                    {maquina.nombre}
+                                </h2>
 
-                            <div className="text-l font-bold text-gray-700 p-1">
-                                <h2>{maquina.nombre}</h2>
+                                <p className="text-sm text-gray-500 mb-3">
+                                    ID: {maquina.id}
+                                </p>
 
-                                <span className="text-gray-500">
-                                    Cod: {maquina.id}
-                                </span>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
 
-                                <div className="flex gap-4 py-1">
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-500">
-                                        {maquina.estado}
-                                    </span>
+                                    <div className="bg-yellow-100 text-yellow-700 rounded-full px-3 py-1 text-center">
+                                        {maquina.pallet?.nombre ?? "Sin pallet"}
+                                    </div>
 
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-500">
-                                        {maquina.ubicacion}
-                                    </span>
+                                    <div className="bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-center">
+                                        Rack {maquina.pallet?.rack?.numero ?? "-"}
+                                    </div>
+
+                                    <div className="bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-center">
+                                        Fila {maquina.pallet?.fila ?? "-"}
+                                    </div>
+
+                                    <div className="bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-center">
+                                        Columna {maquina.pallet?.columna ?? "-"}
+                                    </div>
+
+                                    <div className="bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-center">
+                                        Calle {maquina.pallet?.rack?.calle?.numero ?? "-"}
+                                    </div>
+
+                                    <div className="bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-center">
+                                        Lado {maquina.pallet?.rack?.lado ?? "-"}
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     ))}
-                </div>
-                <div className="flex gap-32">
-                    <button className="w-1/2 bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-600 hover:scale-105 transition-transform cursor-pointer">
-                        + Nueva Máquina
-                    </button>
-                    <button className="w-1/2 bg-white text-black px-4 py-2 rounded-md font-semibold border border-gray-300 hover:bg-gray-100 hover:scale-105 transition-transform cursor-pointer">
-                        Gestionar Secciones
-                    </button>
                 </div>
             </div>
         </>

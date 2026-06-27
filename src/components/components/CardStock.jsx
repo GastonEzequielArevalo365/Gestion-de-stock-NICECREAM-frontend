@@ -5,11 +5,10 @@ const CardStock = ({
     nombre,
     codigo,
     descripcion,
-    estado,
-    rack,
-    fila,
-    columna,
-    pallet,
+    cantidad,
+    alto,
+    ancho,
+    peso,
     imagen,
     onEdit,
     onDelete
@@ -30,13 +29,9 @@ const CardStock = ({
                     <h2 className="text-2xl font-bold text-gray-800">
                         {nombre}
                     </h2>
-                    <span className= {`px-4 py-1 rounded-full font-semibold
-                        ${
-                            estado === "En stock"? "bg-green-100 text green-600":"bg-red-100 text-red-600"
-                        }`}
-                        >
-                            {estado}
-                        </span>
+                    <span className= "px-4 py-1 rounded-full font-semibold">
+                        {descripcion}
+                    </span>
                     <div className="flex gap-6 ext-2xl">
                         <button onClick={onDelete} className="cursor-pointer hover:text-red-500">
                             <FaTrash /> 
@@ -47,20 +42,19 @@ const CardStock = ({
                         ID:{codigo}
                 </p>
                 <div className="flex gap-4 py-2">
-                    <span className="bg-red-100 text-red-500 px-5 py-2 rounded-2xl font-semibold flex items-center gap-2">
-                        <FaMapMarkerAlt />
-                        Rack {rack}
+                    <span className="bg-gray-100 text-green-500 px-5 py-2 rounded-2xl font-semibold flex items-center gap-2">
+                        Cantidad: {cantidad} 
                     </span>
                     <span className="bg-gray-100 px-5 py-2 rounded-2xl">
-                        Fila {fila}
+                        Alto: {alto} CM
                     </span>
 
                     <span className="bg-gray-100 px-5 py-2 rounded-2xl">
-                        Col {columna}
+                        Ancho:{ancho} CM
                     </span>
 
-                    <span className="bg-red-500 text-white px-5 py-2 rounded-2xl font-semibold">
-                        {pallet}
+                    <span className="bg-gray-100 px-5 py-2 rounded-2xl">
+                        Peso: {peso} KG
                     </span>
 
                 </div>
