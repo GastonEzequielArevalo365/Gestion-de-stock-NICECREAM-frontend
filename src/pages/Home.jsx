@@ -51,23 +51,23 @@ const Home = () => {
     return (
         <>
             <Navbar busqueda={busqueda} setBusqueda={setBusqueda} />
-            <div className="w-full  bg-gray-100 shadow-md py-6 px-15">
-                <div className="flex items-center gap-x-10  mb-8">
+            <div className="w-full bg-gray-100 py-8 px-4 md:px-15">
+                <div className="flex items-center gap-3">
                     <img
                         src="public/logo.png"
                         alt="Logo"
-                        className="h-15 w-25"
+                        className="h-10 w-16 md:h-15 md:w-25"
                     />
                     <div>
-                        <h2 className="text-xl font-bold text-gray-700">
+                        <h2 className="text-lg md:text-xl text-gray-700">
                             NICECREAM
                         </h2>
-                        <h2 className="text-xl text-gray-700">
+                        <h2 className="text-sm md:text-xl text-gray-700">
                             Panel de Control - Depósito
                         </h2>
                     </div>
                 </div>
-                <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-6 py-8">
                     <div className="bg-white shadow-md rounded-lg p-6 flex items-center gap-6 hover:scale-110 transition-transform cursor-pointer">
                         <div className="text-red-500 text-3xl mb-2">
                             <FaLayerGroup></FaLayerGroup>
@@ -99,7 +99,7 @@ const Home = () => {
                         <div className="text-green-500 text-3xl">
                             <MdInventory2></MdInventory2>
                         </div>
-                        <div className="flex    flex-col">
+                        <div className="flex flex-col">
                             <h2 className="text-2xl font-bold text-gray-700">{cantidadMaquinas}</h2>
                             <span className="text-gray-700">Máquinas</span>
                         </div>
@@ -108,15 +108,15 @@ const Home = () => {
                 <div className="grid grid-cols-2">
                     <span className="text-gray-700 font-bold flex items-center gap-x-2"><FaClock></FaClock>Ubicación de máquinas</span>
                 </div>
-                <div className="grid grid-cols-2 gap-5 py-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 py-5">
                     {maquinasFiltradas.slice(0,6).map((maquina) => (
                         <div
                             key={maquina.id}
-                            className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform cursor-pointer flex gap-4"
+                            className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform flex gap-4"
                         >
                             <div className="w-24 h-24 bg-gray-200 rounded-3xl overflow-hidden flex-shrink-0">
                                 <img
-                                    src={`http://192.168.1.43:3001/uploads/${maquina.imagen}`}
+                                    src={`http://192.168.1.33:3001/uploads/${maquina.imagen}`}
                                     alt={maquina.nombre}
                                     className="w-full h-full "
                                 />
