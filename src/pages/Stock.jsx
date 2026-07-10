@@ -4,6 +4,8 @@ import CardStock from "../components/components/CardStock";
 import { useEffect, useState } from "react"
 import { getMaquinas, importStock, deleteMaquina } from "../services/maquinas.service";
 import { readExcelFile } from "../utils/excel"
+import ModalMaquina from "../components/components/ModalMaquina"
+import { API_URL } from "../config/api"
 
 const Stock = () => {
 
@@ -11,11 +13,13 @@ const Stock = () => {
     const [busqueda, setBusqueda] = useState("")
     const [modalOpen, setModalOpen] = useState(false);
 
+    const cargarMaquinas = async () => {
+        const maquinas = await getMaquinas()
+        setMaquinas(maquinas)
+    }
+
+
     useEffect(() => {
-        const cargarMaquinas = async () => {
-            const maquinas = await getMaquinas()
-            setMaquinas(maquinas)
-        }
         cargarMaquinas()
     }, [])
 
@@ -29,10 +33,18 @@ const Stock = () => {
         if (!file) return;
         const maquinasExcel = await readExcelFile(file)
         await importStock(maquinasExcel)
-        const maquinasActualizadas = await getMaquinas()
-        setMaquinas(maquinasActualizadas)
+        await cargarMaquinas()
         event.target.value = ""
     }
+
+    const [paginaActual, setPaginaActual] = useState(1);
+    const maquinasPorPagina = 10
+
+    const indiceInicial = (paginaActual - 1) * maquinasPorPagina;
+    const indiceFinal = indiceInicial + maquinasPorPagina
+
+    const maquinasPaginadas = maquinasFiltradas.slice(indiceInicial, indiceFinal);
+    const totalPaginas = Math.ceil(maquinasFiltradas.length / maquinasPorPagina)
 
     return (
         <>
@@ -56,7 +68,7 @@ const Stock = () => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-3 md:flex-row">
-                        <button>
+                        <button onClick={() => setModalOpen(true)} className="cursor-pointer hover:scale-105 transition-transform bg-red-500 hover:bg-red-600 transition-colors text-white rounded-2xl py-2 px-4 ">
                             + Nueva Máquina
                         </button>
                         <label className="cursor-pointer hover:scale-105 transition-transform bg-red-500 hover:bg-red-600 transition-colors text-white rounded-2xl py-2 px-4">
@@ -71,7 +83,7 @@ const Stock = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 py-8">
-                    {maquinasFiltradas.map((maquina) => (
+                    {maquinasPaginadas.map((maquina) => (
                         <div
                             key={maquina.id}
                             className="py-6 hover:scale-105 transition-transform cursor-pointer"
@@ -84,7 +96,7 @@ const Stock = () => {
                                 alto={maquina.alto}
                                 ancho={maquina.ancho}
                                 peso={maquina.peso}
-                                imagen={`http://192.168.1.33:3001/uploads/${maquina.imagen}`}
+                                imagen={`${API_URL}/uploads/${maquina.imagen}`}
                                 onEdit={() => console.log("Editar")}
                                 onDelete={async () => {
                                     const confirmar = window.confirm(
@@ -100,7 +112,22 @@ const Stock = () => {
                         </div>
                     ))}
                 </div>
+                <div className="flex justify-center gap-2 mt-6">
+                    {Array.from({ length: totalPaginas }, (_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setPaginaActual(i + 1)}
+                            className={`px-4 py-2 rounded ${paginaActual === i + 1
+                                ? "bg-red-700 text-white"
+                                : "bg-white border"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
             </div>
+            <ModalMaquina modalOpen={modalOpen} modalClose={() => setModalOpen(false)} onSave={cargarMaquinas} />
         </>
     );
 }

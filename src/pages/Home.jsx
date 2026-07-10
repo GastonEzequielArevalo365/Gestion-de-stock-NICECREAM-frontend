@@ -1,4 +1,5 @@
 import Navbar from '../components/components/Navbar'
+import { Link } from "react-router-dom"
 import { FaLayerGroup, FaClock, FaArrowRight, FaCube } from "react-icons/fa";
 import { TbRoute } from "react-icons/tb";
 import { BsBoxSeam } from "react-icons/bs";
@@ -8,6 +9,7 @@ import { getRacks } from "../services/racks.service"
 import { getCalles } from "../services/calles.service"
 import { getPallets } from "../services/pallets.service"
 import { getMaquinas } from "../services/maquinas.service"
+import {API_URL} from "../config/api.js"
 
 const Home = () => {
     //Use state es un Hook de react que te permite guardar datos (estados) dentro de un componente funcional.
@@ -23,7 +25,7 @@ const Home = () => {
     const [cantidadPallets, setCantidadPallets] = useState(0)
     const [cantidadMaquinas, setCantidadMaquinas] = useState(0)
 
-    //Use state para filtro de máquinas
+    //useState para filtro de máquinas
     const [maquinas, setMaquinas] = useState([]);
     const [busqueda, setBusqueda] = useState("")
 
@@ -47,6 +49,16 @@ const Home = () => {
         maquina.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
         maquina.id.toString().includes(busqueda)
     )
+
+    //useState para ver las páginas de las máquinas
+    const [paginaActual, setPaginaActual] = useState(1);
+    const maquinasPorPagina = 10;
+
+    const indiceInicial = (paginaActual - 1) * maquinasPorPagina;
+    const indiceFinal = indiceInicial + maquinasPorPagina;
+
+    const maquinasPaginadas = maquinasFiltradas.slice(indiceInicial, indiceFinal);
+    const totalPaginas = Math.ceil(maquinasFiltradas.length / maquinasPorPagina)
 
     return (
         <>
@@ -95,28 +107,31 @@ const Home = () => {
                             <span className="text-gray-700">Pallets</span>
                         </div>
                     </div>
-                    <div className="bg-white shadow-md rounded-lg p-6 flex items-center gap-6 hover:scale-110 transition-transform cursor-pointer">
-                        <div className="text-green-500 text-3xl">
-                            <MdInventory2></MdInventory2>
+                    <Link to="/stock">
+                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center gap-6 hover:scale-110 transition-transform cursor-pointer">
+                            <div className="text-green-500 text-3xl">
+                                <MdInventory2></MdInventory2>
+                            </div>
+                            <div className="flex flex-col">
+                                <h2 className="text-2xl font-bold text-gray-700">{cantidadMaquinas}</h2>
+                                <span className="text-gray-700">Máquinas</span>
+
+                            </div>
                         </div>
-                        <div className="flex flex-col">
-                            <h2 className="text-2xl font-bold text-gray-700">{cantidadMaquinas}</h2>
-                            <span className="text-gray-700">Máquinas</span>
-                        </div>
-                    </div>
+                    </Link>
                 </div>
                 <div className="grid grid-cols-2">
                     <span className="text-gray-700 font-bold flex items-center gap-x-2"><FaClock></FaClock>Ubicación de máquinas</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 py-5">
-                    {maquinasFiltradas.slice(0,6).map((maquina) => (
+                    {maquinasPaginadas.map((maquina) => (
                         <div
                             key={maquina.id}
                             className="bg-white shadow-md rounded-lg p-4 hover:scale-105 transition-transform flex gap-4"
                         >
                             <div className="w-24 h-24 bg-gray-200 rounded-3xl overflow-hidden flex-shrink-0">
                                 <img
-                                    src={`http://192.168.1.33:3001/uploads/${maquina.imagen}`}
+                                    src={`${API_URL}/uploads/${maquina.imagen}`}
                                     alt={maquina.nombre}
                                     className="w-full h-full "
                                 />
@@ -159,6 +174,20 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
+                    ))}
+                </div>
+                <div className="flex justify-center gap-2 mt-6">
+                    {Array.from({ length: totalPaginas }, (_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setPaginaActual(i + 1)}
+                            className={`px-4 py-2 rounded ${paginaActual === i + 1
+                                ? "bg-red-700 text-white"
+                                : "bg-white border"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
                     ))}
                 </div>
             </div>

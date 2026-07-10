@@ -12,3 +12,8 @@ export const importStock = async (excelData) => {
 export const deleteMaquina = async (id) =>{
     await api.delete(`/maquinas/${id}`)
 }
+
+export const createMaquina = async (maquina) =>{
+    const response = await api.post("/maquinas",maquina)
+    return response.data
+}
